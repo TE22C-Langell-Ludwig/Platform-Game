@@ -10,27 +10,18 @@ public class Turretshoot : MonoBehaviour
     Transform gunposition;
     [SerializeField]
     GameObject ShotPrefab;
-    [SerializeField]
-    Transform gunrotation;
-    float timeBetweenShots = 2.5f;
+    float timeBetweenShots = 2f;
     float timeSinceLastShot = 0;
 
     void Start(){
-
-
-
     }
     // Update is called once per frame
     void Update()
     {
-        transform.right = gunposition.position - transform.position;
-        Quaternion Rotation = Quaternion.LookRotation(transform.right);
-        print(Rotation);
         timeSinceLastShot += Time.deltaTime;
-
         if (timeSinceLastShot >= timeBetweenShots)
         {
-            Instantiate(ShotPrefab, gunposition.position, Rotation);
+            Instantiate(ShotPrefab, gunposition.position, quaternion.identity, this.transform);
             timeSinceLastShot = 0;
         }
 
