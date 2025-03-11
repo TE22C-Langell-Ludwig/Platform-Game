@@ -21,7 +21,7 @@ public class Turretshoot : MonoBehaviour
         timeSinceLastShot += Time.deltaTime;
         if (timeSinceLastShot >= timeBetweenShots)
         {
-            Instantiate(ShotPrefab, gunposition.position, quaternion.identity, this.transform);
+            Instantiate(ShotPrefab, gunposition.position, quaternion.identity);
             timeSinceLastShot = 0;
         }
 

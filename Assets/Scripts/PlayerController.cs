@@ -1,19 +1,20 @@
-using UnityEditor.Tilemaps;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
-    float jumpForce = 500;
+    float jumpForce = 250;
     [SerializeField]
     float WalljumpForce = 20;
 
     bool mayJump = true;
 
-        bool hasdash = false;
+    bool hasdash = false;
 
-bool maydash = false;
+    bool maydash = false;
 
     [SerializeField]
     Transform grounchecker;
@@ -28,7 +29,11 @@ bool maydash = false;
     [SerializeField]
     float movespeed = 5;
     [SerializeField]
-    float dashforce=50;
+    float dashforce = 50;
+    [SerializeField]
+    float Hp = 5;
+    [SerializeField]
+    Slider HPBar;
 
     void Update()
     {
@@ -47,44 +52,41 @@ bool maydash = false;
 
 
 
+        Rigidbody2D rbb = GetComponent<Rigidbody2D>();
 
         if (Input.GetAxisRaw("Jump") > 0 && mayJump == true)
         {
-            Rigidbody2D rbb = GetComponent<Rigidbody2D>();
             rbb.AddForce(Vector2.up * jumpForce);
             mayJump = false;
-            if(CanWallClimbRight() && IsGrounded()!=true)
+            if (CanWallClimbRight() && IsGrounded() != true)
             {
-            rbb.AddForce(Vector2.left * WalljumpForce);
+                rbb.AddForce(Vector2.left * WalljumpForce);
             }
-            if(CanWallClimbLeft() && IsGrounded()!=true)
+            if (CanWallClimbLeft() && IsGrounded() != true)
             {
-            rbb.AddForce(Vector2.right * WalljumpForce);
+                rbb.AddForce(Vector2.right * WalljumpForce);
             }
         }
         if (IsGrounded() || IsGroundedWallClimb() || CanWallClimbLeft() || CanWallClimbRight())
         {
-            mayJump=true;
-            maydash=true;
-            if ( CanWallClimbLeft() || CanWallClimbRight())
+            mayJump = true;
+            maydash = true;
+            if (CanWallClimbLeft() || CanWallClimbRight())
             {
-            rb.gravityScale=13;
+                rb.gravityScale = 13;
             }
             else
             {
-            rb.gravityScale=11;
+                rb.gravityScale = 11;
             }
         }
-
-        if (Input.GetKeyDown(KeyCode.K) ==true && hasdash == true && maydash == true)
+        if (Input.GetKeyDown(KeyCode.K) == true && hasdash == true && maydash == true)
         {
-            Rigidbody2D rbb = GetComponent<Rigidbody2D>();
             rbb.AddForce(Vector2.left * dashforce);
             maydash = false;
         }
         if (Input.GetKeyDown(KeyCode.P) && hasdash == true && maydash == true)
         {
-            Rigidbody2D rbb = GetComponent<Rigidbody2D>();
             rbb.AddForce(Vector2.right * dashforce);
             maydash = false;
         }
@@ -108,11 +110,20 @@ bool maydash = false;
     {
         if (Other.tag == "DashUnlock")
         {
-        hasdash=true;
+            hasdash = true;
         }
         if (Other.tag == "WinTriangle")
         {
-        SceneManager.LoadScene("Winscreen");
+            SceneManager.LoadScene("Winscreen");
+        }
+        if (Other.tag == "Bullet")
+        {
+            if (Other.tag == "Bullet" && Hp <= 1)
+            {
+                SceneManager.LoadScene("Deathscreen");
+            }
+            Hp -= 1;
+            HPBar.value = Hp;
         }
     }
 }
